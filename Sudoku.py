@@ -92,7 +92,6 @@ def restart_func(choosen_sudoku):
     return choosen_sudoku
 
 
-
 sud_easy = [[6, 7, 4, 5, " ", " ", " ", " ", 3],
             [2, 1, 5, " ", " ", " ", " ", " ", 7],
             [9, " ", " ", 7, " ", 1, 2, " ", " "],
@@ -205,11 +204,13 @@ while not quit:
                 break
             if (choosen_number == "" or choosen_number == "0"):
                 choosen_number = " "
-            while not str.isdigit(choosen_number) or (int(choosen_number) > 9 or int(choosen_number) < 1):
+            else:
+                while not str.isdigit(choosen_number) or (int(choosen_number) > 9 or int(choosen_number) < 1):
                     if (choosen_number == "" or choosen_number == "0") and original[int(choosen_row) - 1][int(choosen_column) - 1] == " ":
                         choosen_number = " "
                         break
                     choosen_number = input("Enter the number: ")
+
             if original[int(choosen_row) - 1][int(choosen_column) - 1] == " ":
                 if choosen_number != " ":
                     choosen_sudoku[int(choosen_row) -

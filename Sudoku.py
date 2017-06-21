@@ -85,6 +85,14 @@ def draw_board():
     print()
 
 
+def restart_func(choosen_sudoku):
+    global restart
+    restart = True
+    choosen_sudoku = deepcopy(original)
+    return choosen_sudoku
+
+
+
 sud_easy = [[6, 7, 4, 5, " ", " ", " ", " ", 3],
             [2, 1, 5, " ", " ", " ", " ", " ", 7],
             [9, " ", " ", 7, " ", 1, 2, " ", " "],
@@ -131,6 +139,7 @@ while not quit:
         print("For row, column and number you can type in numbers from 1 to 9.")
         print("If you want to delete a number, press enter or type \"0\".")
         print("If you want to quit the game or the chosen level, type \"exit\".\n")
+        print("If you want to restart the game, type \"restart\"\ninstead of the number of row or column!\n")
         print("For easy level, press \"1\"\nFor medium level, press \"2\"\nFor hard level, press \"3\"")
         print()
         level = input("Please choose level: ")
@@ -158,16 +167,21 @@ while not quit:
             filled_board = False
             wait()
             os.system('clear')
+
     while not filled_board and not exit:
         draw_board()
         exit = False
 
         input_matrix = ["row", "column"]
+        restart = False
         for i in range(2):
             value = input("Enter the %s: " % input_matrix[i])
             if str.upper(value) == "EXIT":
                 filled_board = True
                 exit = True
+                break
+            if str.upper(value) == "RESTART":
+                choosen_sudoku = restart_func(choosen_sudoku)
                 break
             while not (str.isdigit(value)) or (int(value) > 9 or int(value) < 1):
                 if str.upper(value) == "EXIT":
@@ -175,54 +189,54 @@ while not quit:
                     exit = True
                     break
                 value = input("Enter the %s: " % input_matrix[i])
+                if str.upper(value) == "RESTART":
+                    choosen_sudoku = restart_func(choosen_sudoku)
+                    break
             if exit:
                 break
             if input_matrix[i] == "row":
                 choosen_row = value
             else:
                 choosen_column = value
-
-        choosen_number = input("Enter the number: ")
-        if str.upper(choosen_number) == "EXIT":
-            filled_board = True
-            break
-        if (choosen_number == "" or choosen_number == "0"):
-            choosen_number = " "
-        else:
-            while not str.isdigit(choosen_number) or (
-                    int(choosen_number) > 9 or int(choosen_number) < 1):
-                if (choosen_number == "" or choosen_number == "0") and original[int(choosen_row) - 1][int(choosen_column) - 1] == " ":
-                    choosen_number = " "
-                    break
-                choosen_number = input("Enter the number: ")
-
-        if original[int(choosen_row) - 1][int(choosen_column) - 1] == " ":
-            if choosen_number != " ":
-                choosen_sudoku[int(choosen_row) -
-                               1][int(choosen_column) -
-                                  1] = int(choosen_number)
+        if not restart:
+            choosen_number = input("Enter the number: ")
+            if str.upper(choosen_number) == "EXIT":
+                filled_board = True
+                break
+            if (choosen_number == "" or choosen_number == "0"):
+                choosen_number = " "
+            while not str.isdigit(choosen_number) or (int(choosen_number) > 9 or int(choosen_number) < 1):
+                    if (choosen_number == "" or choosen_number == "0") and original[int(choosen_row) - 1][int(choosen_column) - 1] == " ":
+                        choosen_number = " "
+                        break
+                    choosen_number = input("Enter the number: ")
+            if original[int(choosen_row) - 1][int(choosen_column) - 1] == " ":
+                if choosen_number != " ":
+                    choosen_sudoku[int(choosen_row) -
+                                   1][int(choosen_column) -
+                                      1] = int(choosen_number)
+                else:
+                    choosen_sudoku[int(choosen_row) -
+                                   1][int(choosen_column) -
+                                      1] = choosen_number
             else:
-                choosen_sudoku[int(choosen_row) -
-                               1][int(choosen_column) -
-                                  1] = choosen_number
-        else:
-            if choosen_number != " ":
-                print("You cannot change the given numbers, press enter to continue!")
-                wait()
-            else:
-                print("You cannot delete the given numbers, press enter to continue!")
-                wait()
+                if choosen_number != " ":
+                    print("You cannot change the given numbers, press enter to continue!")
+                    wait()
+                else:
+                    print("You cannot delete the given numbers, press enter to continue!")
+                    wait()
 
-        os.system('clear')
-        filled_board = check_space_in_board()
-        if filled_board:
-            if check_sudoku(choosen_sudoku):
-                draw_board()
-                print("\nCORRECT answer, congratulations!!!\n")
-                quit = True
-            else:
-                draw_board()
-                print("\nWRONG answer, press enter to continue!\n")
-                filled_board = False
-                wait()
-                os.system('clear')
+            os.system('clear')
+            filled_board = check_space_in_board()
+            if filled_board:
+                if check_sudoku(choosen_sudoku):
+                    draw_board()
+                    print("\nCORRECT answer, congratulations!!!\n")
+                    quit = True
+                else:
+                    draw_board()
+                    print("\nWRONG answer, press enter to continue!\n")
+                    filled_board = False
+                    wait()
+                    os.system('clear')

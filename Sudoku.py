@@ -64,19 +64,26 @@ def draw_board():
     shift_column = 0
     shift_row = 0
     row_number = 1
-    start_bold = "\033[1m"
-    end_bold = "\033[0m"
-    print(start_bold, "     1 2 3   4 5 6   7 8 9", end_bold)
+    START_BOLD = "\033[1m"
+    END_BOLD = "\033[0m"
+    START_RED = "\u001b[31m"
+    END_RED = "\u001b[0m"
+    START_GREEN = "\u001b[32m"
+    END_GREEN = "\u001b[0m"
+    print(START_BOLD+START_RED+"      1 2 3   4 5 6   7 8 9"+END_BOLD+END_RED)
     print()
     while shift_column <= 6:
         print("    + - - - + - - - + - - - +", end="\n")
         for row in range(3):
-            print(start_bold, row_number, end_bold, "|", end=" ")
+            print(START_BOLD+START_RED, row_number, END_BOLD+END_RED, "|", end=" ")
             row_number += 1
             shift_row = 0
             while shift_row <= 6:
                 for column in range(3):
-                    print(choosen_sudoku[row + shift_column][column + shift_row], end=" ")
+                    if original[row + shift_column][column + shift_row] == " ":
+                        print(choosen_sudoku[row + shift_column][column + shift_row], end=" ")
+                    else:
+                        print(START_GREEN+str(choosen_sudoku[row + shift_column][column + shift_row])+END_GREEN, end=" ")
                 print("|", end=" ")
                 shift_row += 3
             print()
@@ -92,35 +99,35 @@ def restart_func(choosen_sudoku):
     return choosen_sudoku
 
 
-sud_easy = [[6, 7, 4, 5, " ", " ", " ", " ", 3],
-            [2, 1, 5, " ", " ", " ", " ", " ", 7],
-            [9, " ", " ", 7, " ", 1, 2, " ", " "],
-            [" ", " ", 7, " ", 5, " ", " ", 3, " "],
-            [" ", " ", " ", 2, " ", 4, " ", " ", " "],
-            [" ", 2, " ", " ", 9, " ", 5, " ", " "],
-            [" ", " ", 9, 8, " ", 5, " ", " ", 1],
-            [1, " ", " ", " ", " ", " ", 3, 9, 8],
-            [3, " ", " ", " ", " ", 9, 7, 5, 6]]
+sud_easy = [["6", "7", "4", "5", " ", " ", " ", " ", "3"],
+            ["2", "1", "5", " ", " ", " ", " ", " ", "7"],
+            ["9", " ", " ", "7", " ", "1", "2", " ", " "],
+            [" ", " ", "7", " ", "5", " ", " ", "3", " "],
+            [" ", " ", " ", "2", " ", "4", " ", " ", " "],
+            [" ", "2", " ", " ", "9", " ", "5", " ", " "],
+            [" ", " ", "9", "8", " ", "5", " ", " ", "1"],
+            ["1", " ", " ", " ", " ", " ", "3", "9", "8"],
+            ["3", " ", " ", " ", " ", "9", "7", "5", "6"]]
 
-sud_medium = [[" ", " ", " ", " ", " ", " ", 6, 8, " "],
-              [" ", " ", " ", " ", 7, 3, " ", " ", 9],
-              [3, " ", 9, " ", " ", " ", " ", 4, 5],
-              [4, 9, " ", " ", " ", " ", " ", " ", " "],
-              [8, " ", 3, " ", 5, " ", 9, " ", 2],
-              [" ", " ", " ", " ", " ", " ", " ", 3, 6],
-              [9, 6, " ", " ", " ", " ", 3, " ", 8],
-              [7, " ", " ", 6, 8, " ", " ", " ", " "],
-              [" ", 2, 8, " ", " ", " ", " ", " ", " "]]
+sud_medium = [[" ", " ", " ", " ", " ", " ", "6", "8", " "],
+              [" ", " ", " ", " ", "7", "3", " ", " ", "9"],
+              ["3", " ", "9", " ", " ", " ", " ", "4", "5"],
+              ["4", "9", " ", " ", " ", " ", " ", " ", " "],
+              ["8", " ", "3", " ", "5", " ", "9", " ", "2"],
+              [" ", " ", " ", " ", " ", " ", " ", "3", "6"],
+              ["9", "6", " ", " ", " ", " ", "3", " ", "8"],
+              ["7", " ", " ", "6", "8", " ", " ", " ", " "],
+              [" ", "2", "8", " ", " ", " ", " ", " ", " "]]
 
-sud_hard = [[4, " ", " ", 1, 3, " ", " ", 7, " "],
+sud_hard = [["4", " ", " ", "1", "3", " ", " ", "7", " "],
             [" ", " ", " ", " ", " ", " ", " ", " ", " "],
-            [1, 8, " ", " ", 6, 7, " ", " ", " "],
-            [5, " ", " ", " ", 4, " ", " ", " ", " "],
-            [" ", 6, " ", " ", " ", " ", 4, " ", 7],
-            [" ", " ", 7, " ", " ", " ", 6, 2, " "],
-            [" ", " ", 3, 9, " ", " ", " ", " ", 8],
-            [" ", " ", " ", " ", 1, " ", 3, " ", " "],
-            [" ", " ", " ", " ", " ", 4, " ", 5, " "]]
+            ["1", "8", " ", " ", "6", "7", " ", " ", " "],
+            ["5", " ", " ", " ", "4", " ", " ", " ", " "],
+            [" ", "6", " ", " ", " ", " ", "4", " ", "7"],
+            [" ", " ", "7", " ", " ", " ", "6", "2", " "],
+            [" ", " ", "3", "9", " ", " ", " ", " ", "8"],
+            [" ", " ", " ", " ", "1", " ", "3", " ", " "],
+            [" ", " ", " ", " ", " ", "4", " ", "5", " "]]
 
 choosen_sudoku = []
 
@@ -130,16 +137,20 @@ choosen_column = ""
 input_matrix = [["row", "column"], [choosen_row, choosen_column]]
 
 # main
+START_BLUE = "\u001b[34m"
+END_BLUE = "\u001b[0m"
+START_PINK = "\u001b[35m"
+END_PINK = "\u001b[0m"
 quit = False
 while not quit:
     while True:
         os.system('clear')
         title()
-        print("For row, column and number you can type in numbers from 1 to 9.")
-        print("If you want to delete a number, press enter or type \"0\".")
-        print("If you want to quit the game or the chosen level, type \"exit\".\n")
-        print("If you want to restart the game, type \"restart\"\ninstead of the number of row or column!\n")
-        print("For easy level, press \"1\"\nFor medium level, press \"2\"\nFor hard level, press \"3\"")
+        print("For row, column and number you can type in numbers from", START_BLUE+"1 to 9"+END_BLUE+".")
+        print("If you want to delete a number, press enter or type", START_BLUE+"\"0\""+END_BLUE+".")
+        print("If you want to quit the game or the chosen level, type", START_BLUE, "\"exit\""+END_BLUE+".\n")
+        print("If you want to restart the game, type", START_BLUE+"\"restart\"", END_BLUE, "\ninstead of the number of row or column!\n")
+        print("For easy level, press", START_BLUE, "\"1\""+END_BLUE+"!\nFor medium level, press", START_BLUE+"\"2\""+END_BLUE+"!\nFor hard level, press", START_BLUE+"\"3\""+END_BLUE+"!")
         print()
         level = input("Please choose level: ")
         if level in level_dict.keys():
@@ -159,10 +170,10 @@ while not quit:
     if filled_board:
         if check_sudoku(choosen_sudoku):
             draw_board()
-            print("\nCORRECT answer, congratulations!!!\n")
+            print(START_BLUE+"\nCORRECT answer, congratulations!!!\n"+END_PINK)
         else:
             draw_board()
-            print("\nWRONG answer, press enter to continue!\n")
+            print(START_PINK"\nWRONG answer, press enter to continue!\n"END_PINK)
             filled_board = False
             wait()
             os.system('clear')

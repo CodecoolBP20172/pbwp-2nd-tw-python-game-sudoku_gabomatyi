@@ -173,7 +173,7 @@ while not quit:
             print(START_BLUE+"\nCORRECT answer, congratulations!!!\n"+END_PINK)
         else:
             draw_board()
-            print(START_PINK"\nWRONG answer, press enter to continue!\n"END_PINK)
+            print(START_PINK+"\nWRONG answer, press enter to continue!\n"+END_PINK)
             filled_board = False
             wait()
             os.system('clear')

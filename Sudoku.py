@@ -1,6 +1,8 @@
 import os
-from copy import deepcopy, copy
 import random
+import datetime
+import csv
+from copy import deepcopy, copy
 
 
 def wait():
@@ -80,12 +82,6 @@ def draw_board():
     shift_column = 0
     shift_row = 0
     row_number = 1
-    START_BOLD = "\033[1m"
-    END_BOLD = "\033[0m"
-    START_RED = "\u001b[31m"
-    END_RED = "\u001b[0m"
-    START_GREEN = "\u001b[32m"
-    END_GREEN = "\u001b[0m"
     print(START_BOLD+START_RED+"      1 2 3   4 5 6   7 8 9"+END_BOLD+END_RED)
     print()
     while shift_column <= 6:
@@ -115,29 +111,60 @@ def restart_func(choosen_sudoku):
     return choosen_sudoku
 
 
+def time_export(best_times_dict, filename="times.csv"):
+    try:
+        with open(filename, "a") as output_stream:
+            for name, time in best_times_dict.items():
+                output_stream.write("%s- %s" % (name, time))
+            output_stream.write("%s- %s\n" % (user_name, user_time))
+
+
+    except FileNotFoundError:
+        with open(filename,"w") as output_stream:
+            output_stream.write("%s- %s" % (user_name, user_time))
+
+
+
+
+
+
+
 choosen_sudoku = []
 level_dict = {"1": "easy_sudoku.csv", "2": "medium_sudoku.csv", "3": "hard_sudoku.csv"}
 choosen_row = ""
 choosen_column = ""
+user_name = ""
 input_matrix = [["row", "column"], [choosen_row, choosen_column]]
-
-# main
+best_times_dict = dict()
 START_BLUE = "\u001b[34m"
 END_BLUE = "\u001b[0m"
 START_PINK = "\u001b[35m"
 END_PINK = "\u001b[0m"
+START_RED = "\u001b[31m"
+END_RED = "\u001b[0m"
+START_GREEN = "\u001b[32m"
+END_GREEN = "\u001b[0m"
+START_BOLD = "\033[1m"
+END_BOLD = "\033[0m"
+
+
+# main
+
 quit = False
 while not quit:
     while True:
         os.system('clear')
         title()
-        print("For row, column and number you can type in numbers from", START_BLUE+"1 to 9"+END_BLUE+".")
+        if not user_name:
+            user_name = input("Please enter your name: \n")
+        print("\nFor row, column and number you can type in numbers from", START_BLUE+"1 to 9"+END_BLUE+".")
         print("If you want to delete a number, press enter or type", START_BLUE+"\"0\""+END_BLUE+".")
         print("If you want to quit the game or the chosen level, type", START_BLUE, "\"exit\""+END_BLUE+".\n")
         print("If you want to restart the game, type", START_BLUE+"\"restart\"", END_BLUE, "\ninstead of the number of row or column!\n")
         print("For easy level, press", START_BLUE, "\"1\""+END_BLUE+"!\nFor medium level, press", START_BLUE+"\"2\""+END_BLUE+"!\nFor hard level, press", START_BLUE+"\"3\""+END_BLUE+"!")
         print()
         level = input("Please choose level: ")
+        start_time = datetime.datetime.now()
         if level in level_dict.keys():
             num = random.randint(0, 2)
             choosen_sudoku = import_sudoku(choosen_sudoku, level_dict[level], num)  # deepcopy(level_dict[level])
@@ -228,9 +255,15 @@ while not quit:
             os.system('clear')
             filled_board = check_space_in_board()
             if filled_board:
+                for row in range(len(choosen_sudoku)):
+                    for item in range(len(choosen_sudoku)):
+                        choosen_sudoku[row][item] = int(choosen_sudoku[row][item])
                 if check_sudoku(choosen_sudoku):
                     draw_board()
                     print("\nCORRECT answer, congratulations!!!\n")
+                    user_time = datetime.datetime.now() - start_time
+                    print("Dear %s, your time is: %s." % (user_name, user_time))
+                    time_export(best_times_dict,"results.csv")
                     quit = True
                 else:
                     draw_board()

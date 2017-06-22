@@ -117,16 +117,9 @@ def time_export(best_times_dict, filename="times.csv"):
             for name, time in best_times_dict.items():
                 output_stream.write("%s- %s" % (name, time))
             output_stream.write("%s- %s\n" % (user_name, user_time))
-
-
     except FileNotFoundError:
-        with open(filename,"w") as output_stream:
+        with open(filename, "w") as output_stream:
             output_stream.write("%s- %s" % (user_name, user_time))
-
-
-
-
-
 
 
 choosen_sudoku = []
@@ -134,6 +127,7 @@ level_dict = {"1": "easy_sudoku.csv", "2": "medium_sudoku.csv", "3": "hard_sudok
 choosen_row = ""
 choosen_column = ""
 user_name = ""
+original = []
 input_matrix = [["row", "column"], [choosen_row, choosen_column]]
 best_times_dict = dict()
 START_BLUE = "\u001b[34m"
@@ -151,8 +145,11 @@ END_BOLD = "\033[0m"
 # main
 
 quit = False
+restart = False
 while not quit:
     while True:
+        if exit:
+            choosen_sudoku = deepcopy(original)
         os.system('clear')
         title()
         if not user_name:
@@ -200,32 +197,36 @@ while not quit:
         for i in range(2):
             value = input("Enter the %s: " % input_matrix[i])
             if str.upper(value) == "EXIT":
-                filled_board = True
                 exit = True
                 break
             if str.upper(value) == "RESTART":
                 choosen_sudoku = restart_func(choosen_sudoku)
+                restart = True
                 break
             while not (str.isdigit(value)) or (int(value) > 9 or int(value) < 1):
                 if str.upper(value) == "EXIT":
-                    filled_board = True
                     exit = True
                     break
                 value = input("Enter the %s: " % input_matrix[i])
                 if str.upper(value) == "RESTART":
                     choosen_sudoku = restart_func(choosen_sudoku)
                     break
-            if exit:
+            if exit or restart:
                 break
             if input_matrix[i] == "row":
                 choosen_row = value
             else:
                 choosen_column = value
+        if exit:
+            break
         if not restart:
             choosen_number = input("Enter the number: ")
             if str.upper(choosen_number) == "EXIT":
-                filled_board = True
+                exit = True
                 break
+            if str.upper(choosen_number) == "RESTART":
+                choosen_sudoku = restart_func(choosen_sudoku)
+                continue
             if (choosen_number == "" or choosen_number == "0"):
                 choosen_number = " "
             else:
@@ -233,8 +234,18 @@ while not quit:
                     if (choosen_number == "" or choosen_number == "0") and original[int(choosen_row) - 1][int(choosen_column) - 1] == " ":
                         choosen_number = " "
                         break
+                    if str.upper(choosen_number) == "EXIT":
+                        exit = True
+                        break
+                    if str.upper(choosen_number) == "RESTART":
+                        choosen_sudoku = restart_func(choosen_sudoku)
+                        restart = True
+                        break
                     choosen_number = input("Enter the number: ")
-
+            if exit:
+                break
+            if restart:
+                continue
             if original[int(choosen_row) - 1][int(choosen_column) - 1] == " ":
                 if choosen_number != " ":
                     choosen_sudoku[int(choosen_row) -
@@ -263,7 +274,7 @@ while not quit:
                     print("\nCORRECT answer, congratulations!!!\n")
                     user_time = datetime.datetime.now() - start_time
                     print("Dear %s, your time is: %s." % (user_name, user_time))
-                    time_export(best_times_dict,"results.csv")
+                    time_export(best_times_dict, "results.csv")
                     quit = True
                 else:
                     draw_board()

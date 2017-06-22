@@ -1,9 +1,25 @@
 import os
 from copy import deepcopy, copy
+import random
 
 
 def wait():
     input()
+
+
+def import_sudoku(sudoku, filename="easy_sudoku.csv", skip=0):
+    line_read = 0
+    with open(filename, "r") as input_stream:
+        for i in range((skip*8)+skip):
+            next(input_stream)
+        for line in input_stream:
+            if line_read == 9:
+                break
+            line = line.strip("\n")
+            current_line = line.split(",")
+            sudoku.append(current_line)
+            line_read += 1
+    return sudoku
 
 
 def title():
@@ -99,39 +115,8 @@ def restart_func(choosen_sudoku):
     return choosen_sudoku
 
 
-sud_easy = [["6", "7", "4", "5", " ", " ", " ", " ", "3"],
-            ["2", "1", "5", " ", " ", " ", " ", " ", "7"],
-            ["9", " ", " ", "7", " ", "1", "2", " ", " "],
-            [" ", " ", "7", " ", "5", " ", " ", "3", " "],
-            [" ", " ", " ", "2", " ", "4", " ", " ", " "],
-            [" ", "2", " ", " ", "9", " ", "5", " ", " "],
-            [" ", " ", "9", "8", " ", "5", " ", " ", "1"],
-            ["1", " ", " ", " ", " ", " ", "3", "9", "8"],
-            ["3", " ", " ", " ", " ", "9", "7", "5", "6"]]
-
-sud_medium = [[" ", " ", " ", " ", " ", " ", "6", "8", " "],
-              [" ", " ", " ", " ", "7", "3", " ", " ", "9"],
-              ["3", " ", "9", " ", " ", " ", " ", "4", "5"],
-              ["4", "9", " ", " ", " ", " ", " ", " ", " "],
-              ["8", " ", "3", " ", "5", " ", "9", " ", "2"],
-              [" ", " ", " ", " ", " ", " ", " ", "3", "6"],
-              ["9", "6", " ", " ", " ", " ", "3", " ", "8"],
-              ["7", " ", " ", "6", "8", " ", " ", " ", " "],
-              [" ", "2", "8", " ", " ", " ", " ", " ", " "]]
-
-sud_hard = [["4", " ", " ", "1", "3", " ", " ", "7", " "],
-            [" ", " ", " ", " ", " ", " ", " ", " ", " "],
-            ["1", "8", " ", " ", "6", "7", " ", " ", " "],
-            ["5", " ", " ", " ", "4", " ", " ", " ", " "],
-            [" ", "6", " ", " ", " ", " ", "4", " ", "7"],
-            [" ", " ", "7", " ", " ", " ", "6", "2", " "],
-            [" ", " ", "3", "9", " ", " ", " ", " ", "8"],
-            [" ", " ", " ", " ", "1", " ", "3", " ", " "],
-            [" ", " ", " ", " ", " ", "4", " ", "5", " "]]
-
 choosen_sudoku = []
-
-level_dict = {"1": sud_easy, "2": sud_medium, "3": sud_hard}
+level_dict = {"1": "easy_sudoku.csv", "2": "medium_sudoku.csv", "3": "hard_sudoku.csv"}
 choosen_row = ""
 choosen_column = ""
 input_matrix = [["row", "column"], [choosen_row, choosen_column]]
@@ -154,7 +139,8 @@ while not quit:
         print()
         level = input("Please choose level: ")
         if level in level_dict.keys():
-            choosen_sudoku = deepcopy(level_dict[level])
+            num = random.randint(0, 2)
+            choosen_sudoku = import_sudoku(choosen_sudoku, level_dict[level], num)  # deepcopy(level_dict[level])
             break
         elif str.upper(level) == "EXIT":
             quit = True

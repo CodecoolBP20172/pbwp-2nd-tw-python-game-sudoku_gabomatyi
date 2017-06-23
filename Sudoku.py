@@ -162,10 +162,9 @@ while not quit:
         if not user_name:
             user_name = input("Please enter your name: \n")
         print("\nFor row, column and number you can type in numbers from", START_BLUE+"1 to 9"+END_BLUE+".")
-        print("If you want to delete a number, press enter or type", START_BLUE+"\"0\""+END_BLUE+".")
-        print("If you want to quit the game or the chosen level, type", START_BLUE, "\"exit\""+END_BLUE+".\n")
-        print("If you want to restart the game, type", START_BLUE+"\"restart\"", END_BLUE,
-              "\ninstead of the number of row or column!\n")
+        print("If you want to delete a number, press", START_BLUE+"enter"+END_BLUE+" or type", START_BLUE+"\"0\""+END_BLUE+".")
+        print("If you want to quit the game or the chosen level, type", START_BLUE, "\"exit\""+END_BLUE+".")
+        print("If you want to restart the game, type", START_BLUE+"\"restart\""+END_BLUE+"!\n")
         print("For easy level, press", START_BLUE, "\"1\""+END_BLUE+"!\nFor medium level, press",
               START_BLUE+"\"2\""+END_BLUE+"!\nFor hard level, press", START_BLUE+"\"3\""+END_BLUE+"!")
         print()
@@ -173,7 +172,7 @@ while not quit:
         start_time = datetime.datetime.now()
         if level in level_dict.keys():
             num = random.randint(0, 2)
-            choosen_sudoku = import_sudoku(choosen_sudoku, level_dict[level], num)  # deepcopy(level_dict[level])
+            choosen_sudoku = import_sudoku(choosen_sudoku, level_dict[level], num)
             break
         elif str.upper(level) == "EXIT":
             quit = True
@@ -189,7 +188,7 @@ while not quit:
     if filled_board:
         if check_sudoku(choosen_sudoku):
             draw_board()
-            print(START_BLUE+"\nCORRECT answer, congratulations!!!\n"+END_PINK)
+            print(START_PINK+"\nCORRECT answer, congratulations!!!\n"+END_PINK)
         else:
             draw_board()
             print(START_PINK+"\nWRONG answer, press enter to continue!\n"+END_PINK)
@@ -280,14 +279,14 @@ while not quit:
                         choosen_sudoku[row][item] = int(choosen_sudoku[row][item])
                 if check_sudoku(choosen_sudoku):
                     draw_board()
-                    print("\nCORRECT answer, congratulations!!!\n")
+                    print(START_PINK+"\nCORRECT answer, congratulations!!!\n"+END_PINK)
                     user_time = datetime.datetime.now() - start_time
                     print("Dear %s, your time is: %s." % (user_name, user_time))
                     time_export(best_times_dict, "results.csv")
                     quit = True
                 else:
                     draw_board()
-                    print("\nWRONG answer, press enter to continue!\n")
+                    print(START_PINK+"\nWRONG answer, press enter to continue!\n"+END_PINK)
                     filled_board = False
                     wait()
                     os.system('clear')

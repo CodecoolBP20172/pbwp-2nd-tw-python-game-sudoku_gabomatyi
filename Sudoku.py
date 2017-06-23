@@ -1,14 +1,15 @@
 import os
 import random
 import datetime
-import csv
 from copy import deepcopy, copy
 
 
+# waits for an input before continue
 def wait():
     input()
 
 
+# imports sudoku board from files on a choosen level - randomly from three different games on each level
 def import_sudoku(sudoku, filename="easy_sudoku.csv", skip=0):
     line_read = 0
     with open(filename, "r") as input_stream:
@@ -24,6 +25,7 @@ def import_sudoku(sudoku, filename="easy_sudoku.csv", skip=0):
     return sudoku
 
 
+# draws the Sudoku title
 def title():
     os.system('clear')
     print("   _____           _       _          \n" +
@@ -35,6 +37,7 @@ def title():
           "                                      \n")
 
 
+# checks if the fully filled board is correct (1-9 in each row, column and block)
 def check_sudoku(sudoku_board):
     for row in sudoku_board:
         for number in row:
@@ -68,6 +71,7 @@ def check_sudoku(sudoku_board):
     return True
 
 
+# continually checking if the board is full
 def check_space_in_board():
     filled_board = True
     for row in range(9):
@@ -77,6 +81,7 @@ def check_space_in_board():
     return True
 
 
+# draws the sudoku board
 def draw_board():
     title()
     shift_column = 0
@@ -95,7 +100,8 @@ def draw_board():
                     if original[row + shift_column][column + shift_row] == " ":
                         print(choosen_sudoku[row + shift_column][column + shift_row], end=" ")
                     else:
-                        print(START_GREEN+str(choosen_sudoku[row + shift_column][column + shift_row])+END_GREEN, end=" ")
+                        print(START_GREEN+str(choosen_sudoku[row + shift_column][column + shift_row]) +
+                              END_GREEN, end=" ")
                 print("|", end=" ")
                 shift_row += 3
             print()
@@ -104,6 +110,7 @@ def draw_board():
     print()
 
 
+# restart the choosen board if called by the user
 def restart_func(choosen_sudoku):
     global restart
     restart = True
@@ -111,6 +118,7 @@ def restart_func(choosen_sudoku):
     return choosen_sudoku
 
 
+# exports the time of the game to an external file with the player's name
 def time_export(best_times_dict, filename="times.csv"):
     try:
         with open(filename, "a") as output_stream:
@@ -143,7 +151,6 @@ END_BOLD = "\033[0m"
 
 
 # main
-
 quit = False
 restart = False
 while not quit:
@@ -157,8 +164,10 @@ while not quit:
         print("\nFor row, column and number you can type in numbers from", START_BLUE+"1 to 9"+END_BLUE+".")
         print("If you want to delete a number, press enter or type", START_BLUE+"\"0\""+END_BLUE+".")
         print("If you want to quit the game or the chosen level, type", START_BLUE, "\"exit\""+END_BLUE+".\n")
-        print("If you want to restart the game, type", START_BLUE+"\"restart\"", END_BLUE, "\ninstead of the number of row or column!\n")
-        print("For easy level, press", START_BLUE, "\"1\""+END_BLUE+"!\nFor medium level, press", START_BLUE+"\"2\""+END_BLUE+"!\nFor hard level, press", START_BLUE+"\"3\""+END_BLUE+"!")
+        print("If you want to restart the game, type", START_BLUE+"\"restart\"", END_BLUE,
+              "\ninstead of the number of row or column!\n")
+        print("For easy level, press", START_BLUE, "\"1\""+END_BLUE+"!\nFor medium level, press",
+              START_BLUE+"\"2\""+END_BLUE+"!\nFor hard level, press", START_BLUE+"\"3\""+END_BLUE+"!")
         print()
         level = input("Please choose level: ")
         start_time = datetime.datetime.now()
